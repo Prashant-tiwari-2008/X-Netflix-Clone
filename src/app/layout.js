@@ -20,10 +20,11 @@ export default function RootLayout({ children }) {
           {/* todo : Need to fix ui in tablet view  */}
           <div className="hidden sm:inline border-r h-screen sticky top-0"><LeftSide /></div>
           <div className="w-2xl flex-1 lg:border-x-0 border-gray-100">{children}</div>
-          <div className="hidden lg:inline border-l h-screen sticky top-0 w-96"><RightSide /></div>
+          <div className="hidden lg:inline border-l h-screen top-0 w-96"><RightSide /></div>
           <div></div>
         </div>
-        <Commentpopup />
+        {/* todo : need to work onit */}
+        {/* <Commentpopup /> */}
       </body>
     </html>
   );
