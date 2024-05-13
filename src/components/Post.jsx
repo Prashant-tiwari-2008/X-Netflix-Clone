@@ -3,7 +3,6 @@ import React from 'react'
 import PostActionIcon from './PostActionIcon'
 
 export const Post = ({ post }) => {
-  console.log("post", post)
   return (
     <>
       <div className='border-t-2 flex p-3'>

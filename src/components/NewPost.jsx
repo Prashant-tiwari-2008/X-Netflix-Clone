@@ -3,20 +3,27 @@ import { useRef, useState } from 'react';
 import { HiHome, HiOutlinePhotograph } from 'react-icons/hi';
 import testImage from '../../public/banner.jpg'
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 
 const NewPost = () => {
-  let test = '';
+  debugger
+  const { data: session } = useSession();
+  console.log(session, "session  ")
   const imagePickRef = useRef(null); // todo : need to study about it
   const [selectedFile, setSelectedFile] = useState(true);
 
   return (
     <div>
       <div className='flex'>
-        <HiHome className='w-14 h-12 rounded-full py-1 px-3 bg-gray-500 m-2' />
+        {session ?
+          <Image src={session.user.image} width={50} height={50} className='w-11 h-11 rounded-full m-2' />
+          :
+          <HiHome className='w-14 h-12 rounded-full py-1 px-3 bg-gray-500 m-2' />
+        }
         {/* todo : after class should be added */}
         <div>
           <div className='w-full border-b-2'>
-            <textarea className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wide min-h-[60px] text-gray-700 outline-none" placeholder="What's happening?" maxLength="280" spellCheck="false"></textarea>
+            <textarea className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wide min-h-[60px] text-gray-700 outline-none p-1" placeholder="What's happening?" maxLength="280" spellCheck="false"></textarea>
           </div>
 
           {selectedFile &&
