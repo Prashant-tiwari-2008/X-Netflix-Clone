@@ -14,7 +14,7 @@ export const Post = ({ post }) => {
           </div>
           <p>{post.content}</p>
           <Image src={post.image} width={400} height={400} className={`w-full max-h-[350px] object-cover cursor-pointer py-3`} alt="test" />
-          <PostActionIcon postAuthor={post.username} />
+          <PostActionIcon id={post.id} postAuthor={post.username} />
         </div>
       </div>
     </>

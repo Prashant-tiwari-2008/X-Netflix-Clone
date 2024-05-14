@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
             <div></div>
           </div>
           {/* todo : need to work onit */}
-          {/* <Commentpopup /> */}
+          <Commentpopup />
         </Provider>
       </body>
     </html>
