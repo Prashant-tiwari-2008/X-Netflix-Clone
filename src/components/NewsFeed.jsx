@@ -1,40 +1,21 @@
-import React from 'react'
 import { Post } from './Post'
+import { collection, getDocs, getFirestore, orderBy, query } from 'firebase/firestore'
+import { db } from '@/utils/firebase'
 
 
-var testObject = [
-  {
-    photo: "https://firebasestorage.googleapis.com/v0/b/portfolio-cd86c.appspot.com/o/shared%2Fprashanttiwari.jpg?alt=media&token=caf8f603-0b19-44cd-99b9-b29ae453d9ac",
-    creatorName: "Prashant tiwari",
-    creatorEmail: "@prashanttiwari",
-    content: "hi there I am here just for testing the project",
-    ImgUrl: "https://firebasestorage.googleapis.com/v0/b/portfolio-cd86c.appspot.com/o/shared%2Fbanner.jpg?alt=media&token=83d88f32-1171-465d-aa45-e2804850f2ba"
-  },
-  {
-    photo: "https://firebasestorage.googleapis.com/v0/b/portfolio-cd86c.appspot.com/o/shared%2Fprashanttiwari.jpg?alt=media&token=caf8f603-0b19-44cd-99b9-b29ae453d9ac",
-    creatorName: "Prashant tiwari",
-    creatorEmail: "@prashanttiwari",
-    content: "hi there I am here just for testing the project",
-    ImgUrl: "https://firebasestorage.googleapis.com/v0/b/portfolio-cd86c.appspot.com/o/shared%2Fbanner.jpg?alt=media&token=83d88f32-1171-465d-aa45-e2804850f2ba"
-  },
-  {
-    photo: "https://firebasestorage.googleapis.com/v0/b/portfolio-cd86c.appspot.com/o/shared%2Fprashanttiwari.jpg?alt=media&token=caf8f603-0b19-44cd-99b9-b29ae453d9ac",
-    creatorName: "Prashant tiwari",
-    creatorEmail: "@prashanttiwari",
-    content: "hi there I am here just for testing the project",
-    ImgUrl: "https://firebasestorage.googleapis.com/v0/b/portfolio-cd86c.appspot.com/o/shared%2Fbanner.jpg?alt=media&token=83d88f32-1171-465d-aa45-e2804850f2ba"
-  },
-]
+export default async function Feed() {
+  const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'));
+  const querySnapshot = await getDocs(q);
+  let data = [];
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
 
-
-const Feed = () => {
   return (
     <div>
-      {testObject && testObject.map((post) => (
+      {data && data.map((post) => (
         <Post post={post} />
       ))}
     </div>
   )
 }
-
-export default Feed

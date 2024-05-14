@@ -1,10 +1,12 @@
 'use client'
 
+import { useSession } from "next-auth/react";
 import { HiHeart, HiOutlineChat, HiOutlineTrash } from "react-icons/hi";
 
 
 //todo : icons should be updated on likes and comment
-const PostActionIcon = () => {
+const PostActionIcon = ({ postAuthor }) => {
+  const { data: session } = useSession();
   return (
     <div className="flex justify-start gap-3 p-2 text-gray-500">
       <div className="flex items-center">
@@ -19,9 +21,10 @@ const PostActionIcon = () => {
         />
         <span>4</span>
       </div>
-      <HiOutlineTrash
+    
+      {session && postAuthor == session.username ?  <HiOutlineTrash
         className='h-8 w-8 cursor-pointer rounded-full  transition duration-500 ease-in-out py-2 hover:text-sky-500 hover:bg-sky-100'
-      />
+      /> : ""}
     </div>
   )
 }

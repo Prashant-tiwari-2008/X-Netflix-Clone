@@ -9,13 +9,13 @@ const RightSide = () => {
   const [articalCount, setArticalCount] = useState(3)
 
   useEffect(() => {
-    const getNewsData = async () => {
-      const response = await fetch(`https://saurav.tech/NewsAPI/top-headlines/category/business/us.json`);
-      const data = await response.json();
-      if (data.status = 'ok') {
-        setNews(data.articles)
+      const getNewsData = async () => {
+        const response = await fetch(`https://saurav.tech/NewsAPI/top-headlines/category/business/us.json`);
+        const data = await response.json();
+        if (data.status = 'ok') {
+          setNews(data.articles)
+        }
       }
-    }
     getNewsData();
   }, [])
 
@@ -34,7 +34,7 @@ const RightSide = () => {
             )
           })}
           <button className='p-2 text-sm font-semibold text-blue-600 cursor-pointer'
-          onClick={() => setArticalCount(prev => prev + 3)}
+            onClick={() => setArticalCount(prev => prev + 3)}
           >Show More</button>
         </div>
       </div>
