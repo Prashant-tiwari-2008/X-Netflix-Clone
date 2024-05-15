@@ -1,16 +1,72 @@
 'use client'
 
 import { modalState, postIdState } from "@/atom/modalAtom";
+import { db } from "@/utils/firebase";
+import { Timestamp, collection, deleteDoc, doc, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
 import { signIn, useSession } from "next-auth/react";
-import { HiHeart, HiOutlineChat, HiOutlineTrash } from "react-icons/hi";
+import { useEffect, useState } from "react";
+import { HiHeart, HiOutlineChat, HiOutlineHeart, HiOutlineTrash } from "react-icons/hi";
 import { useRecoilState } from 'recoil';
 
 
 //todo : icons should be updated on likes and comment
-const PostActionIcon = ({ id,postAuthor }) => {
+debugger
+const PostActionIcon = ({ id, postAuthor }) => {
   const { data: session } = useSession();
   const [open, setOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
+  const [likes, setLikes] = useState([]);
+  const [isLiked, setIsLiked] = useState(false);
+  const [comments, setComments] = useState([]);
+
+
+  /**
+   * get the no of likes and set the value
+   */
+  useEffect(() => {
+    onSnapshot(collection(db, 'posts', id, 'likes'), (snapshot) => {
+      setLikes(snapshot.docs)
+    })
+  }, [db])
+
+  /**
+   * 
+   */
+  useEffect(() => {
+    setIsLiked(likes.findIndex((like) => like.id === session?.user?.uid) !== -1)
+  }, [likes])
+
+  /**
+   * get the comments
+   */
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'posts', id, 'comments'),
+      (snapshot) => setComments(snapshot.docs)
+    );
+    return () => unsubscribe();
+  }, [db, id])
+
+  const addLikes = async () => {
+    if (session) {
+      if (isLiked) {
+        await deleteDoc(doc(db, 'posts', id, 'likes', session?.user.uid));
+      } else {
+        await setDoc(doc(db, 'posts', id, 'likes', session.user.uid), {
+          username: session.user.username,
+          timestamp: serverTimestamp()
+        })
+      }
+    } else {
+      signIn();
+    }
+  }
+
+
+  const deletePost = () => {
+
+  }
+
+
   return (
     <div className="flex justify-start gap-3 p-2 text-gray-500">
       <div className="flex items-center">
@@ -26,17 +82,38 @@ const PostActionIcon = ({ id,postAuthor }) => {
           }
           }
         />
-        <span>2</span>
+        {comments.length > 0 ? (
+          <span className='text-xs'>{comments.length}</span>
+        ) :(
+          <span className='text-xs'>0</span>
+        )}
       </div>
       <div className="flex items-center">
-        <HiHeart
-          className='h-8 w-8 cursor-pointer rounded-full  transition duration-500 ease-in-out p-2 hover:text-sky-500 hover:bg-sky-100'
-        />
-        <span>4</span>
+        {isLiked ? (
+          <>
+            <HiHeart
+              className='h-8 w-8 cursor-pointer rounded-full text-red-600  transition duration-500 ease-in-out p-2 hover:text-sky-500 hover:bg-sky-100'
+              onClick={addLikes}
+            />
+          </>
+        ) : (
+          <>
+            <HiOutlineHeart
+              className='h-8 w-8 cursor-pointer rounded-full  transition duration-500 ease-in-out p-2 hover:text-sky-500 hover:bg-sky-100'
+              onClick={addLikes}
+            />
+          </>
+        )}
+        {likes.length > 0 && (
+          <span className={`text-xs ${isLiked && 'text-red-600'}`}>
+            {likes.length}
+          </span>
+        )}
       </div>
 
       {session && postAuthor == session.username ? <HiOutlineTrash
         className='h-8 w-8 cursor-pointer rounded-full  transition duration-500 ease-in-out py-2 hover:text-sky-500 hover:bg-sky-100'
+        onClick={deletePost}
       /> : ""}
     </div>
   )
