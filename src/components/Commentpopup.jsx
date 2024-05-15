@@ -43,7 +43,7 @@ const Commentpopup = () => {
     }).then(() => {
       setInput('');
       setOpen(false);
-      // router.push(`/post/${postId}`);todo : need to create
+      router.push(`/post/${postId}`);
     }).catch((error) => {
       console.error('Error adding document : ', error)
     })

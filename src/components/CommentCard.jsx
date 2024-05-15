@@ -1,19 +1,13 @@
 'use client'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { comment } from 'postcss'
 import React, { useState } from 'react'
 import { HiDotsHorizontal, HiHeart, HiOutlineHeart } from 'react-icons/hi'
 
-const CommentCard = () => {
+const CommentCard = ({ comment, commentId, originalPostId }) => {
+  const { data: session } = useSession()
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState([]); // [1
-
-  let comment = {
-    name: "prashant",
-    username: "prashant tiwari",
-    comment: "testing",
-    userImg: "",
-  }
 
   const likePost = async () => {
 
@@ -21,11 +15,11 @@ const CommentCard = () => {
 
   return (
     <div className='flex p-3 border-b border-gray-200 hover:bg-gray-50 pl-10'>
-      <Image src={comment.userImg} alt='user-img' className='h-9 w-9 rounded-full mr-4' />
+      <Image src={comment.userImg} width={36} height={36} alt='user-img' className='h-9 w-9 rounded-full mr-4' />
       <div className='flex-1'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center space-x-1 whitespace-nowrap'>
-            <h4 className='font-bold text-sm truncate'>{comment?.naem}</h4>
+            <h4 className='font-bold text-sm truncate'>{comment?.name}</h4>
             <span className='text-xs truncate'>@{comment?.username}</span>
           </div>
           <HiDotsHorizontal className='text-sm' />
@@ -48,6 +42,10 @@ const CommentCard = () => {
             </span>
           )}
         </div>
+
+        {/* <div className='flex items-center'>
+          { session.user.uid === }
+        </div> */}
       </div>
     </div>
   )

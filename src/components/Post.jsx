@@ -6,12 +6,12 @@ import Link from 'next/link'
 export const Post = ({ post }) => {
   return (
     <>
-      <div className='border-t-2 flex p-3'>
-        <Image src={post.profileImg} width={60} height={60} alt="test" className='rounded-full h-[50px]' />
+      <div className='border-t-2 flex p-3 max-w-xl mx-auto'>
+        <Image src={post.profileImg} width={60} height={60} alt="test" className='rounded-full h-[50px] w-[50px]' />
         <div className='flex flex-col gap-1 pl-4'>
           <div className='flex flex-row gap-1 items-center'>
             <h2 className='text-sm font-bold'>{post.name}</h2>
-            <p>{post.username}</p>
+            <p>@{post.username}</p>
           </div>
           <Link href={`/posts/${post.id}`}>
             <p>{post.content}</p>
