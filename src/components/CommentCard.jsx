@@ -1,6 +1,7 @@
 'use client'
-import { collection, onSnapshot } from 'firebase/firestore'
-import { useSession } from 'next-auth/react'
+import { db } from '@/utils/firebase'
+import { collection, deleteDoc, doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore'
+import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { HiDotsHorizontal, HiHeart, HiOutlineHeart } from 'react-icons/hi'
@@ -11,16 +12,27 @@ const CommentCard = ({ comment, commentId, originalPostId }) => {
   const [likes, setLikes] = useState([]); // [1
 
   const likePost = async () => {
-
+    if (session) {
+      if (isLiked) {
+        await deleteDoc(doc(db, 'posts', originalPostId, 'comments', commentId, 'likes', session?.user.uid))
+      } else {
+        await setDoc(doc(db, 'posts', originalPostId, 'comments', commentId, 'likes', session.user.uid), {
+          username: session.user.username,
+          timestamp: serverTimestamp()
+        })
+      }
+    } else {
+      signIn();
+    }
   }
 
   useEffect(() => {
-    onSnapshot(collection(db,'posts',originalPostId,'comments',commentId,'likes'),
-    (snapshot) =>{
-      setLikes(snapshot.docs);
-    }
-  )
-  },[db])
+    onSnapshot(collection(db, 'posts', originalPostId, 'comments', commentId, 'likes'),
+      (snapshot) => {
+        setLikes(snapshot.docs);
+      }
+    )
+  }, [db])
 
   useEffect(() => {
     setIsLiked(
@@ -48,7 +60,7 @@ const CommentCard = ({ comment, commentId, originalPostId }) => {
             />
           ) : (
             <HiOutlineHeart onClick={likePost}
-              className='h-8 w-8 cursor-pointer rounded-full transition text-red-600 duration-500 ease-in-out p-2 hover:text-red-500 hover:bg-red-100'
+              className='h-8 w-8 cursor-pointer rounded-full transition text-gray-600 duration-500 ease-in-out p-2 hover:text-red-500 hover:bg-red-100'
             />
           )}
           {likes.length > 0 && (
@@ -58,6 +70,8 @@ const CommentCard = ({ comment, commentId, originalPostId }) => {
           )}
         </div>
 
+          {/*todo : give option to delte comment */}
+          {/*too : give option to edit user comment */}
         {/* <div className='flex items-center'>
           { session.user.uid === }
         </div> */}
