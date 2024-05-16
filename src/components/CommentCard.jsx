@@ -1,7 +1,8 @@
 'use client'
+import { collection, onSnapshot } from 'firebase/firestore'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HiDotsHorizontal, HiHeart, HiOutlineHeart } from 'react-icons/hi'
 
 const CommentCard = ({ comment, commentId, originalPostId }) => {
@@ -12,6 +13,20 @@ const CommentCard = ({ comment, commentId, originalPostId }) => {
   const likePost = async () => {
 
   }
+
+  useEffect(() => {
+    onSnapshot(collection(db,'posts',originalPostId,'comments',commentId,'likes'),
+    (snapshot) =>{
+      setLikes(snapshot.docs);
+    }
+  )
+  },[db])
+
+  useEffect(() => {
+    setIsLiked(
+      likes.findIndex((like) => like.id === session?.user?.uid) !== -1
+    );
+  }, [likes]);
 
   return (
     <div className='flex p-3 border-b border-gray-200 hover:bg-gray-50 pl-10'>
