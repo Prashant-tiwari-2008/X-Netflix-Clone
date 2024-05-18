@@ -12,7 +12,7 @@ import NewPost from "./NewPost";
 import EditPostModel from "./EditPostModel";
 import { PostmodalState, postEditState } from "@/atom/postModalAtom";
 
-const PostActionIcon = ({ post,post : { id, username, uid, getEditPostId }}) => {
+const PostActionIcon = ({ post,post : { id, username, uid }}) => {
   debugger
   const { data: session } = useSession();
   const [open, setOpen] = useRecoilState(modalState);
@@ -68,7 +68,7 @@ const PostActionIcon = ({ post,post : { id, username, uid, getEditPostId }}) => 
   const deletePost = () => {
     if (window.confirm(`Are you sure, you want to delete this post?`)) {
       if (session?.user?.uid === uid) {
-        deleteDoc(doc(db, 'posts', id)).then(() => {
+        deleteDoc(doc(db, 'posts', post.id)).then(() => {
           console.log('Document successfully deleted');
           window.location.reload();
         }).catch((error) => {
