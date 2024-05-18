@@ -4,6 +4,7 @@ import Commentpopup from "@/components/Commentpopup";
 import LeftSide from "@/components/LeftSide";
 import RightSide from "@/components/RightSide";
 import Provider from "@/components/SessionProvider";
+import EditPostModel from "@/components/EditPostModel";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
           </div>
           {/* todo : need to work onit */}
           <Commentpopup />
+          <EditPostModel />
         </Provider>
       </body>
     </html>

@@ -92,7 +92,7 @@ const PostActionIcon = ({ post,post : { id, username, uid }}) => {
               signIn()
             } else {
               setOpen(!open)
-              setPostId(id)
+              setPostId(post.id)
             }
           }
           }

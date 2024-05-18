@@ -20,8 +20,10 @@ const Commentpopup = () => {
   console.log("postId", postId)
 
   useEffect(() => {
+    debugger
+    console.log("post id in comment popup", postId)
     if (postId !== '') {
-      const postRef = doc(db, 'posts', 'postId');
+      const postRef = doc(db, 'posts', postId);
       const unsubscribe = onSnapshot(postRef, (snapshot) => {
         if (snapshot.exists()) {
           setPost(snapshot.data());
@@ -43,7 +45,7 @@ const Commentpopup = () => {
     }).then(() => {
       setInput('');
       setOpen(false);
-      router.push(`/post/${postId}`);
+      router.push(`/posts/${postId}`);
     }).catch((error) => {
       console.error('Error adding document : ', error)
     })
