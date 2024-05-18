@@ -19,7 +19,7 @@ export const Post = ({ post }) => {
           <Link href={`/posts/${post.id}`}>
             <Image src={post.image} width={400} height={400} className={`w-full max-h-[350px] object-cover cursor-pointer py-3`} alt="test" />
           </Link>
-          <PostActionIcon id={post.id} postAuthor={post.username} />
+          <PostActionIcon post={post} />
         </div>
       </div>
     </>

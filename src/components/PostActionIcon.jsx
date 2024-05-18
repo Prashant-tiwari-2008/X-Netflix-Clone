@@ -6,19 +6,22 @@ import { Timestamp, collection, deleteDoc, doc, onSnapshot, serverTimestamp, set
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { HiHeart, HiOutlineChat, HiOutlineHeart, HiOutlineTrash } from "react-icons/hi";
+import { FaEdit } from "react-icons/fa";
 import { useRecoilState } from 'recoil';
+import NewPost from "./NewPost";
+import EditPostModel from "./EditPostModel";
+import { PostmodalState, postEditState } from "@/atom/postModalAtom";
 
-
-//todo : icons should be updated on likes and comment
-debugger
-const PostActionIcon = ({ id, postAuthor }) => {
+const PostActionIcon = ({ post,post : { id, username, uid, getEditPostId }}) => {
+  debugger
   const { data: session } = useSession();
   const [open, setOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
+  const [editModal, setEditModal] = useRecoilState(PostmodalState)
+  const [editPostId, setEditPostId] = useRecoilState(postEditState);
   const [likes, setLikes] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const [comments, setComments] = useState([]);
-
 
   /**
    * get the no of likes and set the value
@@ -63,6 +66,18 @@ const PostActionIcon = ({ id, postAuthor }) => {
 
 
   const deletePost = () => {
+    if (window.confirm(`Are you sure, you want to delete this post?`)) {
+      if (session?.user?.uid === uid) {
+        deleteDoc(doc(db, 'posts', id)).then(() => {
+          console.log('Document successfully deleted');
+          window.location.reload();
+        }).catch((error) => {
+          console.log('Error removing document : ', error);
+        })
+      } else {
+        alert('you are not authorized to delete this post')
+      }
+    }
 
   }
 
@@ -84,7 +99,7 @@ const PostActionIcon = ({ id, postAuthor }) => {
         />
         {comments.length > 0 ? (
           <span className='text-xs'>{comments.length}</span>
-        ) :(
+        ) : (
           <span className='text-xs'>0</span>
         )}
       </div>
@@ -111,9 +126,18 @@ const PostActionIcon = ({ id, postAuthor }) => {
         )}
       </div>
 
-      {session && postAuthor == session.username ? <HiOutlineTrash
+      {session && username == session.user.name ? <HiOutlineTrash
         className='h-8 w-8 cursor-pointer rounded-full  transition duration-500 ease-in-out py-2 hover:text-sky-500 hover:bg-sky-100'
         onClick={deletePost}
+      /> : ""}
+
+      {session && username == session.user.name ? <FaEdit
+        className='h-8 w-8 cursor-pointer rounded-full  transition duration-500 ease-in-out py-2 hover:text-sky-500 hover:bg-sky-100'
+        onClick={() => {
+          setEditModal(true)
+          setEditPostId(post)
+        }
+        }
       /> : ""}
     </div>
   )
