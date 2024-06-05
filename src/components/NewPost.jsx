@@ -76,7 +76,7 @@ const NewPost = () => {
       <div className='flex w-full'>
         {session && <Image src={session.user.image} width={50} height={50} className='w-11 h-11 rounded-full m-2' />}
         {/* todo : after class should be added */}
-        <div className='w-[85%]'>
+        <div className='w-full px-1'>
           <div className='w-full border-b-2 mb-2'>
             <textarea className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wide min-h-[60px] text-gray-700 outline-none p-1" placeholder="What's happening?" maxLength="280" spellCheck="false" onChange={(e) => setText(e.target.value)}></textarea>
           </div>
