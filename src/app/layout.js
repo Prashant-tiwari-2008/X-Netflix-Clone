@@ -14,6 +14,8 @@ export const metadata = {
   description: "X application clone created by Prashant tiwari",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function RootLayout({ children }) {
   // todo : session remaning
   return (
